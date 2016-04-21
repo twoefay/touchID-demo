@@ -11,24 +11,31 @@ import LocalAuthentication
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var statusLabel: UILabel! 
+    
     let context = LAContext()
     let policy = LAPolicy.DeviceOwnerAuthenticationWithBiometrics
-    let error = NSErrorPointer()
+    let error: NSErrorPointer = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        statusLabel.text = ""
     }
     
     func touchIDNotAvailable(){
-        print("TouchID not available on this device.")
+        statusLabel.text = "TouchID not available on this device."
     }
     
     func authenticationSucceeded(){
-        print("Authentication successful")
+        dispatch_async(dispatch_get_main_queue()) { 
+            self.statusLabel.text = "Authentication successful"
+        }
     }
     
     func authenticationFailed(error: NSError){
-        print("Error occurred: \(error)")
+        dispatch_async(dispatch_get_main_queue()) {
+            self.statusLabel.text = "Error occurred: \(error.localizedDescription)"
+        }
     }
     
     @IBAction func buttonTapped(sender: AnyObject) {
